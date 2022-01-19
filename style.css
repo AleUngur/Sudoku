@@ -6,3 +6,19 @@ h1,
 h5 {
   color: white;
 }
+
+.sudoku #gameboard {
+  width: 40vmin;
+  height: 40vmin;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 0;
+}
+
+.sudoku button {
+  width: 10vmin;
+  height: 10vmin;
+  background: white;
+  border: 3px solid gray;
+  margin: 0;
+}
