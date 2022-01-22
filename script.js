@@ -1,13 +1,19 @@
 var number; //number from [1,9] chosen by player
-var matrix = deleteRandomNumbers(); //matrix for numbers in gameboard
-var frequency = Array(9).fill(0);
+var matrix = []; //random generated matrix with gaps to be filled by player
+var frequency = Array(9).fill(0); //frequency array for checking the matrix
+var nrEmptyCells; //number of cells to be empty, set by player
 
-createGameboard();
-selectSquare();
-selectNumber();
-displayEmptyMatrix();
+window.onload = createGameboard();
+
+function startGame() {
+  nrEmptyCells = document.getElementById("emptyCellsNumber").value;
+  displayEmptyMatrix();
+  selectCell();
+  selectNumber();
+}
 
 function createGameboard() {
+  //adding the buttons in the gameboard
   var gameboard = document.getElementById("gameboard");
   for (var i = 0; i < 9; i++) {
     for (var j = 0; j < 9; j++) {
@@ -38,16 +44,18 @@ function setAttribute(element, key, value) {
   element.style[key] = value;
 }
 
-function selectSquare() {
+function selectCell() {
+  //changing the color of the selected cell
   var buttons = document.querySelectorAll(".gameboard button");
   for (btn of buttons) {
     btn.onclick = function () {
-      colorInBlue(this);
+      colorToBlue(this);
     };
   }
 }
 
-function colorInBlue(btn) {
+function colorToBlue(btn) {
+  //changing the class name to color the cell
   var blueButton = document.querySelectorAll(".blue")[0];
   if (btn.className == "white") {
     if (blueButton) {
@@ -58,6 +66,7 @@ function colorInBlue(btn) {
 }
 
 function selectNumber() {
+  //clicking on a number
   var numbers = document.querySelectorAll(".numbers button");
   for (btn of numbers) {
     btn.onclick = function () {
@@ -66,6 +75,7 @@ function selectNumber() {
       addNumberOnGameboard(blueButton, number);
       addNumberInMatrix(blueButton, number);
       displayMessage(blueButton);
+      gameOver();
     };
   }
 }
@@ -76,7 +86,6 @@ function addNumberOnGameboard(btnClicked, nr) {
 }
 
 function numberClicked(idNrClicked) {
-  //return the number chosen by click
   number = document.getElementById(idNrClicked).innerHTML;
   return number;
 }
@@ -88,7 +97,7 @@ function newGame() {
 function addNumberInMatrix(btn, nr) {
   var i = btn.id.charAt(0),
     j = btn.id.charAt(2);
-  matrix[i][j] = nr; //in care matrice adauga? trebuie in cea generata random
+  matrix[i][j] = nr;
 }
 
 function resetFrequency() {
@@ -96,6 +105,7 @@ function resetFrequency() {
 }
 
 function checkInMatrix(line, col) {
+  //checking for the element added to not have doubles on line, column and 3x3 square
   var ok = 1;
   //iterating through the elements on the line to check for doubles
   for (var j = 0; j < 9 && ok == 1; ++j) {
@@ -166,10 +176,10 @@ function deleteNumber() {
     col = blueButton.id.charAt(2);
   blueButton.innerHTML = ""; //deleting element from gameboard
   matrix[line][col] = 0; //deleting element from matrix
+  displayMessage();
 }
 
 function displayMessage(blueButton) {
-  //this should be tested more because it doesn't work how I wanted it to
   var msg = document.getElementById("msg");
   var i = blueButton.id.charAt(0),
     j = blueButton.id.charAt(2);
@@ -182,17 +192,16 @@ function displayMessage(blueButton) {
 
 function generateMatrix() {
   var v = generateArray();
-  var m = [];
-  m[0] = v;
-  m[1] = shiftArray(m[0], 3);
-  m[2] = shiftArray(m[1], 3);
-  m[3] = shiftArray(m[2], 1);
-  m[4] = shiftArray(m[3], 3);
-  m[5] = shiftArray(m[4], 3);
-  m[6] = shiftArray(m[5], 1);
-  m[7] = shiftArray(m[6], 3);
-  m[8] = shiftArray(m[7], 3);
-  return m;
+  matrix[0] = v;
+  matrix[1] = shiftArray(matrix[0], 3);
+  matrix[2] = shiftArray(matrix[1], 3);
+  matrix[3] = shiftArray(matrix[2], 1);
+  matrix[4] = shiftArray(matrix[3], 3);
+  matrix[5] = shiftArray(matrix[4], 3);
+  matrix[6] = shiftArray(matrix[5], 1);
+  matrix[7] = shiftArray(matrix[6], 3);
+  matrix[8] = shiftArray(matrix[7], 3);
+  return matrix;
 }
 
 function generateArray() {
@@ -225,34 +234,28 @@ function shiftArray(arr, nr) {
 }
 
 function deleteRandomNumbers(amountToHide) {
-  var m = generateMatrix();
-  console.log("matrice initiala: ", m);
-  console.log("amountToHide: ", amountToHide);
+  matrix = generateMatrix();
   for (let i = 0; i < amountToHide; ) {
     let randomX = Math.floor(Math.random() * 8);
-    console.log("randX: ", randomX);
     let randomY = Math.floor(Math.random() * 8);
-    console.log("randY: ", randomY);
-    if (m[randomX][randomY] != 0) {
-      m[randomX][randomY] = 0;
+    if (matrix[randomX][randomY] != 0) {
+      matrix[randomX][randomY] = 0;
       i++;
     }
   }
-  console.log("matrice mai golita: ", m);
-  return m;
+  return matrix;
 }
 
 function displayEmptyMatrix() {
-  var m = deleteRandomNumbers(25); //leveeeeeeeeeeeeeeeeelsssssssssss
-  var gameboard = document.getElementById("gameboard");
+  matrix = deleteRandomNumbers(nrEmptyCells);
   var buttons = document.querySelectorAll(".gameboard button");
   for (btn of buttons) {
     var line = btn.id.charAt(0);
     var col = btn.id.charAt(2);
     for (var i = 0; i < 9; i++) {
       for (var j = 0; j < 9; j++) {
-        if (m[i][j] != 0 && line == i && col == j) {
-          btn.innerHTML = m[i][j];
+        if (matrix[i][j] != 0 && line == i && col == j) {
+          btn.innerHTML = matrix[i][j];
           setAttribute(btn, "color", "#8e7dbe");
           setAttribute(btn, "backgroundColor", "#f1e3d3");
         }
@@ -261,7 +264,76 @@ function displayEmptyMatrix() {
   }
 }
 
+function isMatrixFull() {
+  for (var i = 0; i < 9; i++) {
+    for (var j = 0; j < 9; j++) {
+      if (matrix[i][j] == 0) {
+        return false; //the matrix is not full
+      }
+    }
+  }
+  return true; //the matrix is full
+}
+
+function isMatrixCorrect() {
+  var ok = 1;
+  //checking for doubles on lines
+  for (var i = 0; i < 9 && ok == 1; ++i) {
+    for (var j = 0; j < 9 && ok == 1; ++j) {
+      ++frequency[matrix[i][j]];
+      if (frequency[matrix[i][j]] > 1) {
+        ok = 0;
+      }
+    }
+    resetFrequency();
+  }
+  //checking for doubles on columns
+  for (var j = 0; j < 9 && ok == 1; ++j) {
+    for (var i = 1; i < 9 && ok == 1; ++i) {
+      ++frequency[matrix[i][j]];
+      if (frequency[matrix[i][j]] > 1) {
+        ok = 0;
+      }
+    }
+    resetFrequency();
+  }
+  //checking for doubles on each 3x3 square
+  var x1, y1, x2, y2;
+  x1 = 0;
+  x2 = 2;
+  y1 = 0;
+  y2 = 2;
+  while (x1 <= 6 && x2 <= 8) {
+    while (y1 <= 6 && y2 <= 8) {
+      for (var i = x1; i <= x2 && ok == 1; ++i) {
+        for (var j = y1; j <= y2 && ok == 1; ++j) {
+          ++frequency[matrix[i][j]];
+          if (frequency[matrix[i][j]] > 1) {
+            ok = 0;
+          }
+        }
+      }
+      resetFrequency();
+      y1 = y2 + 3;
+      y2 += 3;
+    }
+    x1 = x2 + 3;
+    x2 += 3;
+  }
+  if (ok == 1) return true;
+  //the matrix is solved correctly
+  else return false; //the matrix is solved incorrectly
+}
+
 function gameOver() {
-  //daca matricea e full si e buna afisez mesaj de WIN
-  //daca matricea e plina, dar nu e buna afisez mesaj: "Ai greseli pe tabla! Modifica si incearca sa castigi!"
+  var msg = document.getElementById("msg");
+  if (isMatrixFull()) {
+    if (isMatrixCorrect()) {
+      msg.innerHTML = "Congradulations! You solved the puzzle!";
+    } else if (!isMatrixCorrect()) {
+      msg.innerHTML =
+        "There seems to be a mistake on the board. Check thoroughly and make the needed changes. You can do it!";
+      setAttribute(msg, "font-size", "20px");
+    }
+  }
 }
