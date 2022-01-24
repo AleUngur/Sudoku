@@ -1,6 +1,6 @@
 var number; //number from [1,9] chosen by player
 var matrix = []; //random generated matrix with gaps to be filled by player
-var frequency = Array(9).fill(0); //frequency array for checking the matrix
+var frequency = Array(10).fill(0); //frequency array for checking the matrix
 var nrEmptyCells; //number of cells to be empty, set by player
 
 window.onload = createGameboard();
@@ -66,7 +66,7 @@ function colorToBlue(btn) {
 }
 
 function selectNumber() {
-  //clicking on a number
+  //when clicking on a number
   var numbers = document.querySelectorAll(".numbers button");
   for (btn of numbers) {
     btn.onclick = function () {
@@ -98,10 +98,12 @@ function addNumberInMatrix(btn, nr) {
   var i = btn.id.charAt(0),
     j = btn.id.charAt(2);
   matrix[i][j] = nr;
+  //console.log("number ", nr, "in matrix at [", i, "][", j, "]");
+  //console.log("matrix after adding a number: ", matrix);
 }
 
 function resetFrequency() {
-  frequency = Array(9).fill(0);
+  frequency = Array(10).fill(0);
 }
 
 function checkInMatrix(line, col) {
@@ -162,10 +164,10 @@ function checkInMatrix(line, col) {
   }
   resetFrequency();
   if (ok == 1) {
-    console.log("corect");
+    //console.log("corect");
     return true; //the element is placed correctly
   } else {
-    console.log("incorect");
+    //console.log("incorect");
     return false; //the element is placed incorrectly
   }
 }
@@ -174,8 +176,18 @@ function deleteNumber() {
   var blueButton = document.querySelector(".blue");
   var line = blueButton.id.charAt(0),
     col = blueButton.id.charAt(2);
+  /*console.log(
+    "number ",
+    blueButton.innerHTML,
+    "will be deleted from [",
+    line,
+    "][",
+    col,
+    "]"
+  );*/
   blueButton.innerHTML = ""; //deleting element from gameboard
   matrix[line][col] = 0; //deleting element from matrix
+  //console.log("matrix after delete: ", matrix);
   displayMessage();
 }
 
@@ -183,10 +195,13 @@ function displayMessage(blueButton) {
   var msg = document.getElementById("msg");
   var i = blueButton.id.charAt(0),
     j = blueButton.id.charAt(2);
+  console.log("checking number ", blueButton.innerHTML, "in matrix");
   if (!checkInMatrix(i, j)) {
-    msg.innerHTML = "You addded a number in a wrong spot!";
+    //console.log("wrong");
+    msg.innerHTML = "Wrong!";
   } else {
-    msg.innerHTML = "Keep going! You're doing great!";
+    //console.log("correct");
+    msg.innerHTML = "Correct!";
   }
 }
 
@@ -201,6 +216,7 @@ function generateMatrix() {
   matrix[6] = shiftArray(matrix[5], 1);
   matrix[7] = shiftArray(matrix[6], 3);
   matrix[8] = shiftArray(matrix[7], 3);
+  //console.log("genrated matrix: ", matrix);
   return matrix;
 }
 
@@ -228,7 +244,6 @@ function generateArray() {
 }
 
 function shiftArray(arr, nr) {
-  //array = array.concat(array.splice(0, nr));
   arr = arr.map((_, b) => arr[(b + nr) % arr.length]); // shift left by nr
   return arr;
 }
