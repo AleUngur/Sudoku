@@ -70,8 +70,13 @@ function selectNumber() {
   var numbers = document.querySelectorAll(".numbers button");
   for (btn of numbers) {
     btn.onclick = function () {
-      numberClicked(this.id);
       var blueButton = document.querySelector(".blue");
+      if (!blueButton) {
+        //if a cell isn't selected when clicking a number it displays a message
+        document.getElementById("msg").innerHTML =
+          "Select a cell on the gameboard first!";
+      }
+      numberClicked(this.id);
       addNumberOnGameboard(blueButton, number);
       addNumberInMatrix(blueButton, number);
       displayMessage(blueButton);

@@ -24,7 +24,7 @@
         <div class="col ms-4">
           <button class="my-3" id="input">
             <label class="mb-3" for="emptyCellsNumber"
-              >Number of empty cells:</label
+              >How many cells do you want to be empty?</label
             >
             <input
               type="number"
@@ -48,7 +48,7 @@
             How to play:<br />
             * Enter a number above<br />
             * Press 'Start Game'<br />
-            * Add numbers on the gameboard<br />
+            * Select a cell to add a number<br />
             * Check the messages on the right box<br />
             * You can delete a number you added<br />
             * Play another round
@@ -57,7 +57,7 @@
         <div class="col gameboard me-4" id="gameboard"></div>
         <div class="col me-2">
           <div class="message my-3">
-            <button id="msg">You can solve this puzzle!</button>
+            <button id="msg">Can you solve a SUDOKU puzzle?</button>
           </div>
           <div class="actions">
             <button class="myBtn" onclick="deleteNumber()">Delete</button>
@@ -79,6 +79,9 @@
         </div>
       </div>
     </div>
+    <footer class="mt-2">
+      <p>Developed by Alexandra Ungur<br /></p>
+    </footer>
     <script src="script.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"

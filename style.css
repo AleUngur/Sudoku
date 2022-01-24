@@ -11,6 +11,14 @@ h5 {
   border-style: groove;
   background-color: #d88c9a;
 }
+#btnStart:hover {
+  border-style: groove;
+  background-color: #d88c9a;
+}
+.white:hover {
+  border-style: groove;
+  background-color: #aed9e0;
+}
 
 .sudoku #gameboard {
   width: 30vmin;
@@ -110,4 +118,11 @@ h5 {
   border-style: dotted;
   font-size: 23px;
   transition: 0.25s linear;
+}
+
+footer {
+  text-align: center;
+  padding: 3px;
+  display: block;
+  color: white;
 }
